@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feliz Aniversario Mi Amor</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to bottom, #ff7e5f, #feb47b, #ffd4b8);
+      color: #3a2a1a;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Sol móvil */
+    .sun {
+      position: fixed;
+      top: 5%;
+      right: 10%;
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, #ffde59, #ff914d);
+      border-radius: 50%;
+      box-shadow: 0 0 30px #ff914d;
+      z-index: 0;
+      animation: pulse 8s infinite alternate;
+    }
+
+    /* Nubes móviles */
+    .cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      filter: blur(5px);
+      z-index: 0;
+    }
+
+    /* Corazones flotantes */
+    .heart {
+      position: absolute;
+      pointer-events: none;
+      animation: float 6s ease-in-out infinite;
+      z-index: 1;
+      font-size: 24px;
+      opacity: 0.7;
+    }
+
+    /* Estrellas centelleantes */
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite;
+      z-index: 0;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      padding: 30px 15px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section {
+      width: 100%;
+      max-width: 100%;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(5px);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.2);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.5rem;
+      color: #5d2c0e;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+      background: linear-gradient(to right, #c36a2d, #a62424);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: #5d2c0e;
+    }
+
+    /* Galería mejorada para móviles */
+    .photo-container {
+      position: relative;
+      width: 100%;
+      margin: 15px 0;
+    }
+
+    .photo-main {
+      width: 100%;
+      max-height: 300px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .photo-thumbnails {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+
+    .thumbnail {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      opacity: 0.7;
+    }
+
+    .thumbnail.active, .thumbnail:hover {
+      opacity: 1;
+      border-color: #ff7e5f;
+      transform: scale(1.05);
+    }
+
+    .text-block {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #3a2a1a;
+      padding: 0 5px;
+    }
+
+    .love-btn {
+      background: linear-gradient(to right, #ff7e5f, #feb47b);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-size: 1rem;
+      margin-top: 15px;
+      box-shadow: 0 4px 10px rgba(255, 126, 95, 0.3);
+      width: 80%;
+      max-width: 300px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .love-btn:active {
+      transform: scale(0.98);
+    }
+
+    .love-btn::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255,255,255,0) 45%,
+        rgba(255,255,255,0.6) 50%,
+        rgba(255,255,255,0) 55%
+      );
+      transform: rotate(30deg);
+      opacity: 0;
+    }
+
+    .love-btn:active::after {
+      animation: shine 0.8s ease;
+    }
+
+    .hidden-message {
+      display: none;
+      margin-top: 15px;
+      padding: 15px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 10px;
+      border-left: 3px solid #ff7e5f;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .counter {
+      font-size: 1.1rem;
+      margin: 15px 0;
+      color: #5d2c0e;
+    }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    @keyframes shine {
+      0% { left: -50%; opacity: 0; }
+      50% { opacity: 1; }
+      100% { left: 150%; opacity: 0; }
+    }
+
+    /* Mejoras para tablets */
+    @media (min-width: 768px) {
+      .title {
+        font-size: 3.5rem;
+      }
+      
+      .section {
+        padding: 25px;
+        max-width: 700px;
+      }
+      
+      .photo-main {
+        max-height: 400px;
+      }
+      
+      .thumbnail {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .sun {
+        width: 120px;
+        height: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sun"></div>
+  
+  <!-- Nubes decorativas -->
+  <div class="cloud" style="top: 10%; left: 5%; width: 70px; height: 40px;"></div>
+  <div class="cloud" style="top: 20%; right: 8%; width: 90px; height: 50px;"></div>
+
+  <div class="container">
+
+    <div class="section">
+      <h1 class="title">Feliz Aniversario</h1>
+      <p class="subtitle">Cada día a tu lado es un regalo</p>
+      <div class="counter" id="timeTogether"></div>
+      <button class="love-btn" onclick="showMessage()">Toca para un mensaje</button>
+      <div id="specialMessage" class="hidden-message">
+        <h3>Para mi amor</h3>
+        <p id="dynamicMessage">Eres el amor de mi vida y cada día a tu lado es una bendición.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="photo-container">
+        <img id="mainPhoto" src="foto1.jfif" alt="Nuestra foto" class="photo-main">
+        <div class="photo-thumbnails">
+          <img src="foto1.jfif" alt="Miniatura 1" class="thumbnail active" onclick="changePhoto('foto1.jfif', this)">
+          <img src="foto2.jfif" alt="Miniatura 2" class="thumbnail" onclick="changePhoto('foto2.jfif', this)">
+          <img src="foto3.jfif" alt="Miniatura 3" class="thumbnail" onclick="changePhoto('foto3.jfif', this)">
+          <img src="foto4.jfif" alt="Miniatura 4" class="thumbnail" onclick="changePhoto('foto4.jfif', this)">
+        </div>
+      </div>
+      <div class="text-block">
+        <h2>Nuestros momentos especiales</h2>
+        <p>Estas fotos capturan solo algunos de los muchos momentos felices que hemos compartido juntos.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="text-block">
+        <h2>Lo que más amo de ti</h2>
+        <p>Tu sonrisa que ilumina mis días, tu forma de hacerme sentir especial, y cómo cada momento a tu lado se convierte en un recuerdo invaluable.</p>
+      </div>
+      <div class="photo-container">
+        <img src="img2.png" alt="Lo que amo de ti" class="photo-main">
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Nuestro futuro</h2>
+      <p class="text-block">Sé que nos esperan muchos más atardeceres juntos, muchas más risas y momentos inolvidables. Estoy emocionado/a por todo lo que vendrá.</p>
+      <p>Te amo más que ayer, pero menos que mañana.</p>
+    </div>
+
+  </div>
+
+  <script>
+    // Efectos visuales
+    function createHearts() {
+      const heart = document.createElement('div');
+      heart.innerHTML = '❤️';
+      heart.className = 'heart';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.top = Math.random() * 100 + 'vh';
+      heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+      heart.style.animationDuration = (Math.random() * 6 + 3) + 's';
+      heart.style.opacity = Math.random() * 0.5 + 0.3;
+      document.body.appendChild(heart);
+      
+      setTimeout(() => {
+        heart.remove();
+      }, 6000);
+    }
+
+    function createStars() {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = Math.random() * 100 + 'vh';
+      star.style.width = (Math.random() * 3 + 1) + 'px';
+      star.style.height = star.style.width;
+      star.style.animationDelay = Math.random() * 3 + 's';
+      document.body.appendChild(star);
+      
+      setTimeout(() => {
+        star.remove();
+      }, 5000);
+    }
+
+    // Cambiar foto principal
+    function changePhoto(src, element) {
+      document.getElementById('mainPhoto').src = src;
+      document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.classList.remove('active');
+      });
+      element.classList.add('active');
+    }
+
+    // Mensaje especial
+    function showMessage() {
+      const messages = [
+        "Eres mi sol en cada atardecer y mi luz en cada amanecer.",
+        "No hay mejor regalo en mi vida que tu amor.",
+        "Contigo he encontrado el amor que solo soñaba tener.",
+        "Cada día a tu lado es una página en nuestra hermosa historia.",
+        "Eres mi persona favorita en todo el universo."
+      ];
+      
+      const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+      document.getElementById('dynamicMessage').textContent = randomMessage;
+      
+      const messageDiv = document.getElementById('specialMessage');
+      messageDiv.style.display = 'block';
+      
+      // Crear corazones al mostrar mensaje
+      for (let i = 0; i < 10; i++) {
+        setTimeout(createHearts, i * 200);
+      }
+    }
+
+    // Tiempo juntos
+    function calculateTimeTogether() {
+      const anniversaryDate = new Date('2022-06-10'); // CAMBIA ESTA FECHA
+      const diffDays = Math.floor((new Date() - anniversaryDate) / (1000 * 60 * 60 * 24));
+      const years = Math.floor(diffDays / 365);
+      const months = Math.floor((diffDays % 365) / 30);
+      const days = (diffDays % 365) % 30;
+      
+      document.getElementById('timeTogether').textContent = 
+        `Llevamos juntos: ${years} años, ${months} meses y ${days} días`;
+    }
+
+    // Iniciar efectos
+    window.addEventListener('DOMContentLoaded', () => {
+      calculateTimeTogether();
+      
+      // Crear corazones y estrellas iniciales
+      setInterval(createHearts, 800);
+      setInterval(createStars, 500);
+      
+      // Efecto de carga suave
+      document.body.style.opacity = '0';
+      setTimeout(() => {
+        document.body.style.transition = 'opacity 0.8s ease';
+        document.body.style.opacity = '1';
+      }, 100);
+    });
+
+    // Efecto al hacer scroll
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      if (currentScroll > lastScroll) {
+        createStars();
+      }
+      lastScroll = currentScroll;
+    });
+  </script>
+</body>
+</html>
